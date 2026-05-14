@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Анастасия Алексеева](https://up.htmlacademy.ru/react-individual/3/user/2483017).
-* Наставник: `Неизвестно`.
+* Наставник: [Юрий Последов](https://htmlacademy.ru/profile/unidentifiedraccoon).
 
 ---
 
