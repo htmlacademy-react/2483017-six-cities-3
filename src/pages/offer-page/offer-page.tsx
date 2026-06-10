@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
-import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
+import { AppRoute, STAR_WIDTH_PERCENT, NEARBY_OFFERS_LIMIT } from '../../const';
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import Map from '../../components/map/map';
-import OffersList from '../../components/offer-list/offer-list';
+import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -33,7 +33,7 @@ function OfferPage({offers, reviews}: OfferPageProps) {
 
   const nearbyOffers = offers
     .filter((offer) => offer.id !== currentOffer.id)
-    .slice(0, 3);
+    .slice(0, NEARBY_OFFERS_LIMIT);
 
   const {
     title,
@@ -256,12 +256,7 @@ function OfferPage({offers, reviews}: OfferPageProps) {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OffersList
-              offers={nearbyOffers}
-              className="near-places__list places__list"
-              cardClassName="near-places__card place-card"
-              imageWrapperClassName="near-places__image-wrapper place-card__image-wrapper"
-            />
+            <NearbyOffersList offers={nearbyOffers} />
           </section>
         </div>
       </main>

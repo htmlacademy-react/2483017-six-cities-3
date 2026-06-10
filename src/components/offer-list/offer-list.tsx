@@ -3,31 +3,23 @@ import OfferCard from '../offer-card/offer-card';
 
 type OffersListProps = {
   offers: Offer[];
-  onCardMouseEnter?: (offerId: string) => void;
-  onCardMouseLeave?: () => void;
-  className?: string;
-  cardClassName?: string;
-  imageWrapperClassName?: string;
+  onCardMouseEnter: (offerId: string) => void;
+  onCardMouseLeave: () => void;
 };
 
 function OffersList({
   offers,
   onCardMouseEnter,
   onCardMouseLeave,
-  className = 'cities__places-list places__list tabs__content',
-  cardClassName = 'cities__card place-card',
-  imageWrapperClassName = 'cities__image-wrapper place-card__image-wrapper',
 }: OffersListProps) {
   return (
-    <div className={className}>
+    <div className='cities__places-list places__list tabs__content'>
       {offers.map((offer) => (
         <OfferCard
           key={offer.id}
           offer={offer}
           onMouseEnter={onCardMouseEnter}
           onMouseLeave={onCardMouseLeave}
-          cardClassName={cardClassName}
-          imageWrapperClassName={imageWrapperClassName}
         />
       ))}
     </div>

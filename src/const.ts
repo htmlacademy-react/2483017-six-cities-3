@@ -16,3 +16,5 @@ export const STAR_WIDTH_PERCENT = 20;
 export const URL_MARKER_DEFAULT = '/img/pin.svg';
 
 export const URL_MARKER_CURRENT = '/img/pin-active.svg';
+
+export const NEARBY_OFFERS_LIMIT = 3;
