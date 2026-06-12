@@ -27,3 +27,17 @@ export const CITIES = [
   'Hamburg',
   'Dusseldorf',
 ];
+
+export enum SortOption {
+  Popular = 'Popular',
+  PriceLowToHigh = 'Price: low to high',
+  PriceHighToLow = 'Price: high to low',
+  TopRatedFirst = 'Top rated first',
+}
+
+export const SORT_OPTIONS = [
+  SortOption.Popular,
+  SortOption.PriceLowToHigh,
+  SortOption.PriceHighToLow,
+  SortOption.TopRatedFirst,
+];
