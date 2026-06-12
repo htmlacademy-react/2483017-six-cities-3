@@ -28,7 +28,7 @@ function OfferCard({
 
   return (
     <article
-      className='cities__card place-card'
+      className="cities__card place-card"
       onMouseEnter={() => onMouseEnter(id)}
       onMouseLeave={onMouseLeave}
     >
@@ -37,7 +37,7 @@ function OfferCard({
           <span>Premium</span>
         </div>
       )}
-      <div className='cities__image-wrapper place-card__image-wrapper'>
+      <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={offerPath}>
           <img
             className="place-card__image"
