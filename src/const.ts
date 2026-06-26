@@ -13,6 +13,7 @@ export enum AuthorizationStatus {
 
 export enum APIRoute {
   Offers = '/offers',
+  Login = '/login',
 }
 
 export const STAR_WIDTH_PERCENT = 20;

@@ -1,2 +1,2 @@
 export { reducer } from './offers.reducer';
-export { changeCity, fillOffers, setOffersLoadingStatus } from './offers.actions';
+export { changeCity, fillOffers, requireAuthorization, setOffersLoadingStatus } from './offers.actions';
