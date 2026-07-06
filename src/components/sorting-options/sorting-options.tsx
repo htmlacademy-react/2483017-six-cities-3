@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import classNames from 'classnames';
 import { SortOption, SORT_OPTIONS } from '../../const';
 
@@ -38,4 +39,6 @@ function SortingOptions({
   );
 }
 
-export default SortingOptions;
+const MemoizedSortingOptions = memo(SortingOptions);
+
+export default MemoizedSortingOptions;

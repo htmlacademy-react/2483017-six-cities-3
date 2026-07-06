@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { Review as ReviewType } from '../../types/review';
-import Review from '../review/review';
+import Review from '../reviews/review';
 import { REVIEWS_LIMIT } from '../../const';
 
 type ReviewsListProps = {
@@ -7,11 +8,14 @@ type ReviewsListProps = {
 };
 
 function ReviewsList({reviews}: ReviewsListProps) {
-  const sortedReviews = [...reviews]
-    .sort((reviewA, reviewB) =>
-      new Date(reviewB.date).getTime() - new Date(reviewA.date).getTime()
-    )
-    .slice(0, REVIEWS_LIMIT);
+  const sortedReviews = useMemo(
+    () => [...reviews]
+      .sort((reviewA, reviewB) =>
+        new Date(reviewB.date).getTime() - new Date(reviewA.date).getTime()
+      )
+      .slice(0, REVIEWS_LIMIT),
+    [reviews]
+  );
 
   return (
     <>

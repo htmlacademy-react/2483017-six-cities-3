@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { Offer } from '../../types/offer';
-import NearbyOffer from '../nearby-offer/nearby-offer';
+import NearbyOffer from './nearby-offer';
 
 type NearbyOffersListProps = {
   offers: Offer[];
@@ -18,4 +19,6 @@ function NearbyOffersList({offers}: NearbyOffersListProps) {
   );
 }
 
-export default NearbyOffersList;
+const MemoizedNearbyOffersList = memo(NearbyOffersList);
+
+export default MemoizedNearbyOffersList;

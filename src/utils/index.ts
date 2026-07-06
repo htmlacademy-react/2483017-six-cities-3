@@ -1,2 +1,2 @@
 export { formatReviewDate } from './common';
-export { getSortedOffers } from './offers';
+export { getSortedOffers, getFavoriteOffersByCity } from './offers';
