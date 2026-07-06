@@ -19,3 +19,17 @@ export const getSortedOffers = (
       return [...offers];
   }
 };
+
+export function getFavoriteOffersByCity(offers: Offer[]) {
+  return offers.reduce<Record<string, Offer[]>>((favoriteOffersByCity, offer) => {
+    const cityName = offer.city.name;
+
+    if (!favoriteOffersByCity[cityName]) {
+      favoriteOffersByCity[cityName] = [];
+    }
+
+    favoriteOffersByCity[cityName].push(offer);
+
+    return favoriteOffersByCity;
+  }, {});
+}

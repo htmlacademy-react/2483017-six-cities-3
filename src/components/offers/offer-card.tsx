@@ -1,7 +1,8 @@
-import classNames from 'classnames';
+import { memo } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
 import { Offer } from '../../types/offer';
+import CardFavoriteButton from './card-favorite-button';
 
 type OfferCardProps = {
   offer: Offer;
@@ -54,21 +55,10 @@ function OfferCard({
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button
-            className={classNames(
-              'place-card__bookmark-button',
-              'button',
-              {'place-card__bookmark-button--active': isFavorite}
-            )}
-            type="button"
-          >
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
-            </svg>
-            <span className="visually-hidden">
-              {isFavorite ? 'In bookmarks' : 'To bookmarks'}
-            </span>
-          </button>
+          <CardFavoriteButton
+            offerId={id}
+            isFavorite={isFavorite}
+          />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
@@ -85,4 +75,6 @@ function OfferCard({
   );
 }
 
-export default OfferCard;
+const MemoizedOfferCard = memo(OfferCard);
+
+export default MemoizedOfferCard;

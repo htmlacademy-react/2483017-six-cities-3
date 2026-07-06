@@ -1,15 +1,21 @@
+import { memo, useCallback } from 'react';
 import classNames from 'classnames';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { changeCity, selectCity } from '../../store/app-process';
+import { CITIES } from '../../const';
 
-type CitiesListProps = {
-  cities: string[];
-  activeCity: string;
-  onCityClick: (city: string) => void;
-};
+function CitiesList() {
+  const dispatch = useAppDispatch();
 
-function CitiesList({cities, activeCity, onCityClick}: CitiesListProps) {
+  const activeCity = useAppSelector(selectCity);
+
+  const handleCityClick = useCallback((selectedCityName: string) => {
+    dispatch(changeCity(selectedCityName));
+  }, [dispatch]);
+
   return (
     <ul className="locations__list tabs__list">
-      {cities.map((city) => (
+      {CITIES.map((city) => (
         <li className="locations__item" key={city}>
           <button
             className={classNames(
@@ -20,7 +26,7 @@ function CitiesList({cities, activeCity, onCityClick}: CitiesListProps) {
               }
             )}
             type="button"
-            onClick={() => onCityClick(city)}
+            onClick={() => handleCityClick(city)}
           >
             <span>{city}</span>
           </button>
@@ -30,4 +36,6 @@ function CitiesList({cities, activeCity, onCityClick}: CitiesListProps) {
   );
 }
 
-export default CitiesList;
+const MemoizedCitiesList = memo(CitiesList);
+
+export default MemoizedCitiesList;

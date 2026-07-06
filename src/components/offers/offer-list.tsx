@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { Offer } from '../../types/offer';
-import OfferCard from '../offer-card/offer-card';
+import OfferCard from './offer-card';
 
 type OffersListProps = {
   offers: Offer[];
@@ -26,4 +27,6 @@ function OffersList({
   );
 }
 
-export default OffersList;
+const MemoizedOffersList = memo(OffersList);
+
+export default MemoizedOffersList;

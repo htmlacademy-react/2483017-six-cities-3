@@ -17,6 +17,7 @@ export enum APIRoute {
   Login = '/login',
   Logout = '/logout',
   Comments = '/comments',
+  Favorite = '/favorite',
 }
 
 export const STAR_WIDTH_PERCENT = 20;
@@ -61,3 +62,12 @@ export const MIN_REVIEW_LENGTH = 50;
 export const MAX_REVIEW_LENGTH = 300;
 
 export const REVIEWS_LIMIT = 10;
+
+export const SINGULAR_AMOUNT = 1;
+
+export enum NameSpace {
+  App = 'APP',
+  User = 'USER',
+  Offers = 'OFFERS',
+  Offer = 'OFFER',
+}
