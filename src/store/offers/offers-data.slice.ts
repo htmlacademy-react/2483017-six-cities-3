@@ -4,15 +4,18 @@ import { Offer } from '../../types/offer';
 import {
   fetchOffersAction,
   changeFavoriteStatusAction,
+  fetchFavoriteOffersAction,
 } from '../api-actions';
 
 type OffersData = {
   offers: Offer[];
+  favoriteOffers: Offer[];
   isOffersLoading: boolean;
 };
 
 const initialState: OffersData = {
   offers: [],
+  favoriteOffers: [],
   isOffersLoading: false,
 };
 
@@ -38,6 +41,9 @@ export const offersData = createSlice({
       })
       .addCase(fetchOffersAction.rejected, (state) => {
         state.isOffersLoading = false;
+      })
+      .addCase(fetchFavoriteOffersAction.fulfilled, (state, action) => {
+        state.favoriteOffers = action.payload;
       })
       .addCase(changeFavoriteStatusAction.fulfilled, (state, action) => {
         const updatedOffer = action.payload;

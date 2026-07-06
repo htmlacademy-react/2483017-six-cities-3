@@ -66,16 +66,27 @@ export const sendReviewAction = createAsyncThunk<Review, ReviewPost, Extra>(
   },
 );
 
+export const fetchFavoriteOffersAction = createAsyncThunk<Offer[], undefined, Extra>(
+  'offers/fetchFavoriteOffers',
+  async (_arg, { extra: api }) => {
+    const { data } = await api.get<Offer[]>(APIRoute.Favorite);
+
+    return data;
+  },
+);
+
 export const changeFavoriteStatusAction = createAsyncThunk<
   Offer,
   { offerId: string; status: number },
   Extra
 >(
   'offers/changeFavoriteStatus',
-  async ({ offerId, status }, { extra: api }) => {
+  async ({ offerId, status }, { extra: api, dispatch }) => {
     const { data } = await api.post<Offer>(
       `${APIRoute.Favorite}/${offerId}/${status}`
     );
+
+    dispatch(fetchFavoriteOffersAction());
 
     return data;
   },
@@ -83,8 +94,10 @@ export const changeFavoriteStatusAction = createAsyncThunk<
 
 export const checkAuthAction = createAsyncThunk<UserData, undefined, Extra>(
   'user/checkAuth',
-  async (_arg, { extra: api }) => {
+  async (_arg, { extra: api, dispatch }) => {
     const { data } = await api.get<UserData>(APIRoute.Login);
+
+    dispatch(fetchFavoriteOffersAction());
 
     return data;
   },
@@ -98,6 +111,7 @@ export const loginAction = createAsyncThunk<UserData, AuthData, Extra>(
     saveToken(data.token);
 
     dispatch(fetchOffersAction());
+    dispatch(fetchFavoriteOffersAction());
 
     return data;
   },
