@@ -8,12 +8,12 @@ import OffersList from '../offers/offer-list';
 import Map from '../map/map';
 import { selectCurrentCityOffers } from '../../store/offers';
 import { selectCity } from '../../store/app-process';
+import OffersEmpty from '../offers/offers-empty';
 
 function OffersSection() {
   const cityName = useAppSelector(selectCity);
   const currentCityOffers = useAppSelector(selectCurrentCityOffers);
 
-  const selectedCity = currentCityOffers[0]?.city;
 
   const [activeSortOption, setActiveSortOption] = useState(SortOption.Popular);
   const [activeOfferId, handleCardMouseEnter, handleCardMouseLeave] = useActiveOffer();
@@ -27,6 +27,12 @@ function OffersSection() {
     () => sortedOffers.find((offer) => offer.id === activeOfferId),
     [sortedOffers, activeOfferId]
   );
+
+  if (currentCityOffers.length === 0) {
+    return <OffersEmpty cityName={cityName} />;
+  }
+
+  const selectedCity = currentCityOffers[0].city;
 
   return (
     <div className="cities">

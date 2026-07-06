@@ -14,10 +14,8 @@ export const selectCurrentCityOffers = createSelector(
   (offers, city) => offers.filter((offer) => offer.city.name === city)
 );
 
-export const selectFavoriteOffers = createSelector(
-  [selectOffers],
-  (offers) => offers.filter((offer) => offer.isFavorite)
-);
+export const selectFavoriteOffers = (state: State) =>
+  state[NameSpace.Offers].favoriteOffers;
 
 export const selectFavoriteOffersCount = createSelector(
   [selectFavoriteOffers],
