@@ -6,17 +6,8 @@ import FavoritesPage from '../pages/favorites-page/favorites-page';
 import OfferPage from '../pages/offer-page/offer-page';
 import NotFoundPage from '../pages/not-found-page/not-found-page';
 import PrivateRoute from '../components/private-route/private-route';
-import Spinner from '../components/spinner/spinner';
-import { useAppSelector } from '../hooks';
-import { selectOffersLoadingStatus } from '../store/offers';
 
 function App() {
-  const isOffersLoading = useAppSelector(selectOffersLoadingStatus);
-
-  if (isOffersLoading) {
-    return <Spinner />;
-  }
-
   return (
     <BrowserRouter>
       <Routes>

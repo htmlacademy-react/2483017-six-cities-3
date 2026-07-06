@@ -1,24 +1,26 @@
 import { Link, Navigate } from 'react-router-dom';
-import { useRef, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { selectAuthorizationStatus } from '../../store/user-process';
 
 function LoginPage() {
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
-
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    if (emailRef.current !== null && passwordRef.current !== null) {
+    const form = evt.currentTarget;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    if (typeof email === 'string' && typeof password === 'string') {
       dispatch(loginAction({
-        email: emailRef.current.value,
-        password: passwordRef.current.value
+        email,
+        password,
       }));
     }
   };
@@ -65,7 +67,6 @@ function LoginPage() {
                   name="email"
                   placeholder="Email"
                   required
-                  ref={emailRef}
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -76,7 +77,6 @@ function LoginPage() {
                   name="password"
                   placeholder="Password"
                   required
-                  ref={passwordRef}
                 />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>

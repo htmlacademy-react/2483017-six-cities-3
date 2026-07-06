@@ -6,6 +6,7 @@ import { Review, ReviewPost } from '../types/review';
 import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
 import { saveToken, dropToken } from '../services/token';
+import { resetOffersFavoriteStatus } from './offers';
 
 type Extra = {
   extra: AxiosInstance;
@@ -91,10 +92,12 @@ export const checkAuthAction = createAsyncThunk<UserData, undefined, Extra>(
 
 export const loginAction = createAsyncThunk<UserData, AuthData, Extra>(
   'user/login',
-  async ({ email, password }, { extra: api }) => {
+  async ({ email, password }, { extra: api, dispatch }) => {
     const { data } = await api.post<UserData>(APIRoute.Login, { email, password });
 
     saveToken(data.token);
+
+    dispatch(fetchOffersAction());
 
     return data;
   },
@@ -102,9 +105,13 @@ export const loginAction = createAsyncThunk<UserData, AuthData, Extra>(
 
 export const logoutAction = createAsyncThunk<void, undefined, Extra>(
   'user/logout',
-  async (_arg, { extra: api }) => {
-    await api.delete(APIRoute.Logout);
+  async (_arg, { extra: api, dispatch }) => {
+    try {
+      await api.delete(APIRoute.Logout);
+    } finally {
+      dropToken();
 
-    dropToken();
+      dispatch(resetOffersFavoriteStatus());
+    }
   },
 );

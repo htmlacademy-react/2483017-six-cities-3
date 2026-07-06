@@ -1,9 +1,11 @@
 export {
   offersData,
+  resetOffersFavoriteStatus,
 } from './offers-data.slice';
 
 export {
   offerData,
+  resetOfferData,
 } from './offer-data.slice';
 
 export {
