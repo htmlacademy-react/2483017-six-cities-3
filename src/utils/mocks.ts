@@ -1,25 +1,28 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { Offer, OfferDetails } from '../types/offer';
+import { City, Offer, OfferDetails } from '../types/offer';
 import { Review } from '../types/review';
 import { UserData } from '../types/user-data';
 import { createAPI } from '../services/api';
 import { State } from '../types/state';
 import { AuthorizationStatus, CITIES, NameSpace } from '../const';
+import { AuthData } from '../types/auth-data';
+
+export const makeFakeCity = (): City => ({
+  name: 'Paris',
+  location: {
+    latitude: 48.85661,
+    longitude: 2.351499,
+    zoom: 13,
+  },
+});
 
 export const makeFakeOffer = (id = '1'): Offer => ({
   id,
   title: `Beautiful offer ${id}`,
   type: 'apartment',
   price: 120,
-  city: {
-    name: 'Paris',
-    location: {
-      latitude: 48.85661,
-      longitude: 2.351499,
-      zoom: 13,
-    },
-  },
+  city: makeFakeCity(),
   location: {
     latitude: 48.85661,
     longitude: 2.351499,
@@ -64,6 +67,11 @@ export const makeFakeUserData = (): UserData => ({
   id: 1,
   email: 'test@test.com',
   token: 'secret-token',
+});
+
+export const makeFakeAuthData = (): AuthData => ({
+  email: 'test@test.com',
+  password: '123456',
 });
 
 export const extractActionsTypes = (actions: Action<string>[]) =>
