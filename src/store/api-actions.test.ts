@@ -3,6 +3,7 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
 import { createAPI } from '../services/api';
+import * as tokenStorage from '../services/token';
 import { State } from '../types/state';
 import {
   AppThunkDispatch,
@@ -11,6 +12,7 @@ import {
   makeFakeOfferDetails,
   makeFakeReview,
   makeFakeUserData,
+  makeFakeAuthData,
 } from '../utils/mocks';
 import { APIRoute } from '../const';
 import {
@@ -21,8 +23,11 @@ import {
   fetchOfferAction,
   fetchOffersAction,
   fetchReviewsAction,
+  loginAction,
+  logoutAction,
   sendReviewAction,
 } from './api-actions';
+import { resetOffersFavoriteStatus } from './offers';
 
 describe('Async actions', () => {
   const axios = createAPI();
@@ -37,6 +42,7 @@ describe('Async actions', () => {
   let mockStore: ReturnType<typeof mockStoreCreator>;
 
   beforeEach(() => {
+    mockAxiosAdapter.reset();
     mockStore = mockStoreCreator({});
   });
 
@@ -360,6 +366,78 @@ describe('Async actions', () => {
         checkAuthAction.pending.type,
         checkAuthAction.rejected.type,
       ]);
+    });
+  });
+
+  describe('loginAction', () => {
+    it('should dispatch "loginAction.pending", "fetchOffersAction.pending", "fetchFavoriteOffersAction.pending" and "loginAction.fulfilled" when server response 200', async () => {
+      const mockAuthData = makeFakeAuthData();
+      const mockUserData = makeFakeUserData();
+
+      mockAxiosAdapter
+        .onPost(APIRoute.Login, mockAuthData)
+        .reply(200, mockUserData);
+
+      await mockStore.dispatch(loginAction(mockAuthData));
+
+      const actions = extractActionsTypes(mockStore.getActions());
+
+      expect(actions).toEqual([
+        loginAction.pending.type,
+        fetchOffersAction.pending.type,
+        fetchFavoriteOffersAction.pending.type,
+        loginAction.fulfilled.type,
+      ]);
+    });
+
+    it('should call "saveToken" once with the received token', async () => {
+      const mockAuthData = makeFakeAuthData();
+      const mockUserData = makeFakeUserData();
+
+      const mockSaveToken = vi.spyOn(tokenStorage, 'saveToken');
+
+      mockAxiosAdapter
+        .onPost(APIRoute.Login, mockAuthData)
+        .reply(200, mockUserData);
+
+      await mockStore.dispatch(loginAction(mockAuthData));
+
+      expect(mockSaveToken).toHaveBeenCalledTimes(1);
+      expect(mockSaveToken).toHaveBeenCalledWith(mockUserData.token);
+
+      mockSaveToken.mockRestore();
+    });
+  });
+
+  describe('logoutAction', () => {
+    it('should dispatch "logoutAction.pending", "resetOffersFavoriteStatus" and "logoutAction.fulfilled" when server response 204', async () => {
+      mockAxiosAdapter
+        .onDelete(APIRoute.Logout)
+        .reply(204);
+
+      await mockStore.dispatch(logoutAction());
+
+      const actions = extractActionsTypes(mockStore.getActions());
+
+      expect(actions).toEqual([
+        logoutAction.pending.type,
+        resetOffersFavoriteStatus.type,
+        logoutAction.fulfilled.type,
+      ]);
+    });
+
+    it('should call "dropToken" once', async () => {
+      const mockDropToken = vi.spyOn(tokenStorage, 'dropToken');
+
+      mockAxiosAdapter
+        .onDelete(APIRoute.Logout)
+        .reply(204);
+
+      await mockStore.dispatch(logoutAction());
+
+      expect(mockDropToken).toHaveBeenCalledTimes(1);
+
+      mockDropToken.mockRestore();
     });
   });
 });

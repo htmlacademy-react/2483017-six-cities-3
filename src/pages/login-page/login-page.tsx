@@ -60,9 +60,15 @@ function LoginPage() {
               onSubmit={handleSubmit}
             >
               <div className="login__input-wrapper form__input-wrapper">
-                <label className="visually-hidden">E-mail</label>
+                <label
+                  className="visually-hidden"
+                  htmlFor="email"
+                >
+                  E-mail
+                </label>
                 <input
                   className="login__input form__input"
+                  id="email"
                   type="email"
                   name="email"
                   placeholder="Email"
@@ -70,9 +76,15 @@ function LoginPage() {
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
-                <label className="visually-hidden">Password</label>
+                <label
+                  className="visually-hidden"
+                  htmlFor="password"
+                >
+                  Password
+                </label>
                 <input
                   className="login__input form__input"
+                  id="password"
                   type="password"
                   name="password"
                   placeholder="Password"
