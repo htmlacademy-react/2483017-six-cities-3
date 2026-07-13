@@ -21,13 +21,25 @@ vi.mock('../../components/favorites/favorites-empty', () => ({
   default: () => <div>Favorites empty</div>,
 }));
 
+vi.mock('../../components/server-error/server-error', () => ({
+  default: () => (
+    <div role="alert">
+      Failed to load data. Please try again later.
+    </div>
+  ),
+}));
+
 describe('Component: FavoritesPage', () => {
-  it('should render empty favorites when favorite offers list is empty', () => {
-    const { withStoreComponent, mockAxiosAdapter } = withStore(
+  it('should render empty favorites when favorite offers list is empty', async () => {
+    const {
+      withStoreComponent,
+      mockAxiosAdapter,
+    } = withStore(
       withHistory(<FavoritesPage />),
       makeFakeStore({
         [NameSpace.Offers]: {
           favoriteOffers: [],
+          isFavoriteOffersLoadingError: false,
         },
       }),
     );
@@ -56,19 +68,27 @@ describe('Component: FavoritesPage', () => {
 
     expect(container.querySelector('.page__main'))
       .toHaveClass('page__main--favorites-empty');
+
+    await waitFor(() => {
+      expect(mockAxiosAdapter.history.get).toHaveLength(1);
+    });
   });
 
-  it('should render favorite offers list when favorite offers exist', () => {
+  it('should render favorite offers list when favorite offers exist', async () => {
     const mockFavoriteOffer = {
       ...makeFakeOffer(),
       isFavorite: true,
     };
 
-    const { withStoreComponent, mockAxiosAdapter } = withStore(
+    const {
+      withStoreComponent,
+      mockAxiosAdapter,
+    } = withStore(
       withHistory(<FavoritesPage />),
       makeFakeStore({
         [NameSpace.Offers]: {
           favoriteOffers: [mockFavoriteOffer],
+          isFavoriteOffersLoadingError: false,
         },
       }),
     );
@@ -100,9 +120,47 @@ describe('Component: FavoritesPage', () => {
 
     expect(container.querySelector('.page__main'))
       .not.toHaveClass('page__main--favorites-empty');
+
+    await waitFor(() => {
+      expect(mockAxiosAdapter.history.get).toHaveLength(1);
+    });
   });
 
-  it('should dispatch "fetchFavoriteOffersAction" when component mounts', async () => {
+  it('should render server error when favorite offers loading failed', () => {
+    const { withStoreComponent } = withStore(
+      withHistory(<FavoritesPage />),
+      makeFakeStore({
+        [NameSpace.Offers]: {
+          favoriteOffers: [],
+          isFavoriteOffersLoadingError: true,
+        },
+      }),
+    );
+
+    render(withStoreComponent);
+
+    expect(screen.getByText('Header')).toBeInTheDocument();
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Failed to load data. Please try again later.',
+    );
+
+    expect(
+      screen.queryByText('Favorites list'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByText('Favorites empty'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('heading', {
+        name: 'Saved listing',
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('should dispatch fetchFavoriteOffersAction when component mounts', async () => {
     const mockFavoriteOffers = [
       {
         ...makeFakeOffer(),
@@ -126,13 +184,37 @@ describe('Component: FavoritesPage', () => {
     render(withStoreComponent);
 
     await waitFor(() => {
-      const actions = extractActionsTypes(
-        mockStore.getActions(),
-      );
-
-      expect(actions).toEqual([
+      expect(
+        extractActionsTypes(mockStore.getActions()),
+      ).toEqual([
         fetchFavoriteOffersAction.pending.type,
         fetchFavoriteOffersAction.fulfilled.type,
+      ]);
+    });
+  });
+
+  it('should dispatch rejected action when favorite offers request fails', async () => {
+    const {
+      withStoreComponent,
+      mockStore,
+      mockAxiosAdapter,
+    } = withStore(
+      withHistory(<FavoritesPage />),
+      makeFakeStore(),
+    );
+
+    mockAxiosAdapter
+      .onGet(APIRoute.Favorite)
+      .networkError();
+
+    render(withStoreComponent);
+
+    await waitFor(() => {
+      expect(
+        extractActionsTypes(mockStore.getActions()),
+      ).toEqual([
+        fetchFavoriteOffersAction.pending.type,
+        fetchFavoriteOffersAction.rejected.type,
       ]);
     });
   });

@@ -55,4 +55,56 @@ describe('Component: SortingOptions', () => {
     expect(handleSortOptionChange).toHaveBeenCalledTimes(1);
     expect(handleSortOptionChange).toHaveBeenCalledWith(selectedSortOption);
   });
+
+  it('should be closed by default and open when user clicks current sort option', async () => {
+    const user = userEvent.setup();
+
+    const { container } = render(
+      <SortingOptions
+        activeSortOption={SortOption.Popular}
+        onSortOptionChange={vi.fn()}
+      />,
+    );
+
+    const optionsList = container.querySelector('.places__options');
+
+    const currentSortOption = screen
+      .getAllByText(SortOption.Popular)
+      .find((element) => element.tagName === 'SPAN');
+
+    expect(optionsList).not.toHaveClass('places__options--opened');
+    expect(currentSortOption).toBeDefined();
+
+    await user.click(currentSortOption!);
+
+    expect(optionsList).toHaveClass('places__options--opened');
+  });
+
+  it('should close options list after user selects sort option', async () => {
+    const user = userEvent.setup();
+
+    const { container } = render(
+      <SortingOptions
+        activeSortOption={SortOption.Popular}
+        onSortOptionChange={vi.fn()}
+      />,
+    );
+
+    const optionsList = container.querySelector('.places__options');
+
+    const currentSortOption = screen
+      .getAllByText(SortOption.Popular)
+      .find((element) => element.tagName === 'SPAN');
+
+    expect(optionsList).not.toHaveClass('places__options--opened');
+    expect(currentSortOption).toBeDefined();
+
+    await user.click(currentSortOption!);
+
+    expect(optionsList).toHaveClass('places__options--opened');
+
+    await user.click(screen.getByText(SortOption.PriceLowToHigh));
+
+    expect(optionsList).not.toHaveClass('places__options--opened');
+  });
 });

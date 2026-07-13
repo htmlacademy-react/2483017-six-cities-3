@@ -32,12 +32,12 @@ import { resetOffersFavoriteStatus } from './offers';
 describe('Async actions', () => {
   const axios = createAPI();
   const mockAxiosAdapter = new MockAdapter(axios);
-  const middleware = [thunk.withExtraArgument(axios)];
+  const middlewareList = [thunk.withExtraArgument(axios)];
   const mockStoreCreator = configureMockStore<
     State,
     Action<string>,
     AppThunkDispatch
-  >(middleware);
+  >(middlewareList);
 
   let mockStore: ReturnType<typeof mockStoreCreator>;
 
@@ -307,7 +307,6 @@ describe('Async actions', () => {
 
       expect(actions).toEqual([
         changeFavoriteStatusAction.pending.type,
-        fetchFavoriteOffersAction.pending.type,
         changeFavoriteStatusAction.fulfilled.type,
       ]);
     });

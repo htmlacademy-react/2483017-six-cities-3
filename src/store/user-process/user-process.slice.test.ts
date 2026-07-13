@@ -55,7 +55,7 @@ describe('UserProcess Slice', () => {
     expect(result).toEqual(expectedState);
   });
 
-  it('should set "authorizationStatus" to "NoAuth" and clear "userEmail" with "checkAuthAction.rejected"', () => {
+  it('should set "authorizationStatus" to "NoAuth" and clear "userEmail" when checkAuthAction is rejected with 401', () => {
     const initialState = {
       authorizationStatus: AuthorizationStatus.Unknown,
       userEmail: 'test@test.com',
@@ -68,7 +68,26 @@ describe('UserProcess Slice', () => {
 
     const result = userProcess.reducer(
       initialState,
-      checkAuthAction.rejected(null, '', undefined)
+      checkAuthAction.rejected(null, '', undefined, 401)
+    );
+
+    expect(result).toEqual(expectedState);
+  });
+
+  it('should set "authorizationStatus" to "Error" when checkAuthAction is rejected because server is unavailable', () => {
+    const initialState = {
+      authorizationStatus: AuthorizationStatus.Unknown,
+      userEmail: 'test@test.com',
+    };
+
+    const expectedState = {
+      authorizationStatus: AuthorizationStatus.Error,
+      userEmail: 'test@test.com',
+    };
+
+    const result = userProcess.reducer(
+      initialState,
+      checkAuthAction.rejected(null, '', undefined, 0)
     );
 
     expect(result).toEqual(expectedState);

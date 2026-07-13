@@ -12,251 +12,231 @@ import {
 } from '../../utils/mocks';
 import { offerData, resetOfferData } from './offer-data.slice';
 
+const makeInitialState = () => ({
+  currentOffer: null,
+  nearbyOffers: [],
+  reviews: [],
+  isOfferLoading: false,
+  isOfferNotFound: false,
+  isOfferLoadingError: false,
+});
+
 describe('OfferData Slice', () => {
   it('should return initial state when passed empty action and undefined state', () => {
-    const emptyAction = { type: '' };
+    const result = offerData.reducer(undefined, { type: '' });
 
-    const expectedState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
-    };
-
-    const result = offerData.reducer(undefined, emptyAction);
-
-    expect(result).toEqual(expectedState);
+    expect(result).toEqual(makeInitialState());
   });
 
   it('should return current state when passed empty action', () => {
     const currentState = {
+      ...makeInitialState(),
       currentOffer: makeFakeOfferDetails('1'),
       nearbyOffers: [makeFakeOffer('2')],
       reviews: [makeFakeReview('1')],
       isOfferLoading: true,
-      isOfferNotFound: false,
     };
 
-    const emptyAction = { type: '' };
-
-    const result = offerData.reducer(currentState, emptyAction);
+    const result = offerData.reducer(currentState, { type: '' });
 
     expect(result).toEqual(currentState);
   });
 
-  it('should reset offer data with "resetOfferData"', () => {
+  it('should reset offer data with resetOfferData', () => {
     const initialState = {
+      ...makeInitialState(),
       currentOffer: makeFakeOfferDetails('1'),
       nearbyOffers: [makeFakeOffer('2')],
       reviews: [makeFakeReview('1')],
       isOfferLoading: true,
       isOfferNotFound: true,
-    };
-
-    const expectedState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
+      isOfferLoadingError: true,
     };
 
     const result = offerData.reducer(initialState, resetOfferData());
 
-    expect(result).toEqual(expectedState);
+    expect(result).toEqual(makeInitialState());
   });
 
-  it('should set "isOfferLoading" to "true" and "isOfferNotFound" to "false" with "fetchOfferAction.pending"', () => {
+  it('should start loading offer with fetchOfferAction.pending', () => {
     const initialState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
+      ...makeInitialState(),
       isOfferNotFound: true,
+      isOfferLoadingError: true,
     };
 
     const result = offerData.reducer(
       initialState,
-      fetchOfferAction.pending('', '1')
+      fetchOfferAction.pending('', '1'),
     );
 
-    expect(result.isOfferLoading).toBe(true);
-    expect(result.isOfferNotFound).toBe(false);
+    expect(result).toEqual({
+      ...initialState,
+      isOfferLoading: true,
+      isOfferNotFound: false,
+      isOfferLoadingError: false,
+    });
   });
 
-  it('should set "currentOffer" to offer, "isOfferLoading" to "false" and "isOfferNotFound" to "false" with "fetchOfferAction.fulfilled"', () => {
+  it('should save offer with fetchOfferAction.fulfilled', () => {
     const mockOffer = makeFakeOfferDetails('1');
 
     const initialState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
+      ...makeInitialState(),
       isOfferLoading: true,
-      isOfferNotFound: false,
-    };
-
-    const expectedState = {
-      currentOffer: mockOffer,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
-    };
-
-    const result = offerData.reducer(
-      initialState,
-      fetchOfferAction.fulfilled(mockOffer, '', mockOffer.id)
-    );
-
-    expect(result).toEqual(expectedState);
-  });
-
-  it('should set "currentOffer" to "null", "isOfferLoading" to "false" and "isOfferNotFound" to "true" with "fetchOfferAction.rejected"', () => {
-    const initialState = {
-      currentOffer: makeFakeOfferDetails('1'),
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: true,
-      isOfferNotFound: false,
-    };
-
-    const expectedState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
       isOfferNotFound: true,
+      isOfferLoadingError: true,
     };
 
     const result = offerData.reducer(
       initialState,
-      fetchOfferAction.rejected(null, '', '1')
+      fetchOfferAction.fulfilled(mockOffer, '', mockOffer.id),
     );
 
-    expect(result).toEqual(expectedState);
+    expect(result).toEqual({
+      ...makeInitialState(),
+      currentOffer: mockOffer,
+    });
   });
 
-  it('should set "nearbyOffers" to array with nearby offers with "fetchNearbyOffersAction.fulfilled"', () => {
+  it('should mark offer as not found when fetchOfferAction is rejected with 404', () => {
+    const initialState = {
+      ...makeInitialState(),
+      currentOffer: makeFakeOfferDetails('1'),
+      isOfferLoading: true,
+    };
+
+    const result = offerData.reducer(
+      initialState,
+      fetchOfferAction.rejected(null, '', '1', 404),
+    );
+
+    expect(result).toEqual({
+      ...makeInitialState(),
+      isOfferNotFound: true,
+    });
+  });
+
+  it('should mark loading error when fetchOfferAction fails without 404', () => {
+    const initialState = {
+      ...makeInitialState(),
+      currentOffer: makeFakeOfferDetails('1'),
+      isOfferLoading: true,
+    };
+
+    const result = offerData.reducer(
+      initialState,
+      fetchOfferAction.rejected(null, '', '1', 0),
+    );
+
+    expect(result).toEqual({
+      ...makeInitialState(),
+      isOfferLoadingError: true,
+    });
+  });
+
+  it('should save nearby offers with fetchNearbyOffersAction.fulfilled', () => {
     const mockNearbyOffers = [
       makeFakeOffer('1'),
       makeFakeOffer('2'),
     ];
 
-    const initialState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
-    };
-
     const result = offerData.reducer(
-      initialState,
-      fetchNearbyOffersAction.fulfilled(mockNearbyOffers, '', '1')
+      makeInitialState(),
+      fetchNearbyOffersAction.fulfilled(mockNearbyOffers, '', '1'),
     );
 
     expect(result.nearbyOffers).toEqual(mockNearbyOffers);
   });
 
-  it('should set "reviews" to array with reviews with "fetchReviewsAction.fulfilled"', () => {
+  it('should save reviews with fetchReviewsAction.fulfilled', () => {
     const mockReviews = [
       makeFakeReview('1'),
       makeFakeReview('2'),
     ];
 
-    const initialState = {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
-    };
-
     const result = offerData.reducer(
-      initialState,
-      fetchReviewsAction.fulfilled(mockReviews, '', '1')
+      makeInitialState(),
+      fetchReviewsAction.fulfilled(mockReviews, '', '1'),
     );
 
     expect(result.reviews).toEqual(mockReviews);
   });
 
-  it('should add new review to the beginning of "reviews" with "sendReviewAction.fulfilled"', () => {
+  it('should add a new review to the beginning with sendReviewAction.fulfilled', () => {
     const oldReview = makeFakeReview('1');
     const newReview = makeFakeReview('2');
 
-    const reviewPost = {
-      offerId: '1',
-      comment: newReview.comment,
-      rating: newReview.rating,
-    };
-
     const initialState = {
-      currentOffer: null,
-      nearbyOffers: [],
+      ...makeInitialState(),
       reviews: [oldReview],
-      isOfferLoading: false,
-      isOfferNotFound: false,
     };
 
     const result = offerData.reducer(
       initialState,
-      sendReviewAction.fulfilled(newReview, '', reviewPost)
+      sendReviewAction.fulfilled(newReview, '', {
+        offerId: '1',
+        comment: newReview.comment,
+        rating: newReview.rating,
+      }),
     );
 
-    expect(result.reviews).toEqual([newReview, oldReview]);
+    expect(result.reviews).toEqual([
+      newReview,
+      oldReview,
+    ]);
   });
 
-  it('should update offer in "nearbyOffers" with "changeFavoriteStatusAction.fulfilled"', () => {
-    const offer = makeFakeOffer('1');
-    const anotherOffer = makeFakeOffer('2');
+  it('should update an offer in nearbyOffers with changeFavoriteStatusAction.fulfilled', () => {
+    const firstOffer = makeFakeOffer('1');
+    const secondOffer = makeFakeOffer('2');
 
     const updatedOffer = {
-      ...offer,
+      ...makeFakeOffer('1'),
       isFavorite: true,
     };
 
     const initialState = {
-      currentOffer: null,
-      nearbyOffers: [offer, anotherOffer],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
+      ...makeInitialState(),
+      nearbyOffers: [
+        firstOffer,
+        secondOffer,
+      ],
     };
 
     const result = offerData.reducer(
       initialState,
       changeFavoriteStatusAction.fulfilled(updatedOffer, '', {
-        offerId: offer.id,
+        offerId: '1',
         status: 1,
-      })
+      }),
     );
 
-    expect(result.nearbyOffers).toEqual([updatedOffer, anotherOffer]);
+    expect(result.nearbyOffers).toEqual([
+      updatedOffer,
+      secondOffer,
+    ]);
   });
 
-  it('should update "isFavorite" in "currentOffer" with "changeFavoriteStatusAction.fulfilled"', () => {
+  it('should update isFavorite in currentOffer with changeFavoriteStatusAction.fulfilled', () => {
     const currentOffer = makeFakeOfferDetails('1');
 
     const updatedOffer = {
-      ...makeFakeOffer(currentOffer.id),
+      ...makeFakeOffer('1'),
       isFavorite: true,
     };
 
     const initialState = {
+      ...makeInitialState(),
       currentOffer,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isOfferNotFound: false,
     };
 
     const result = offerData.reducer(
       initialState,
       changeFavoriteStatusAction.fulfilled(updatedOffer, '', {
-        offerId: currentOffer.id,
+        offerId: '1',
         status: 1,
-      })
+      }),
     );
 
     expect(result.currentOffer).toEqual({

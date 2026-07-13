@@ -2,8 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 import {
   AppRoute,
-  NEARBY_OFFERS_LIMIT,
-  OFFER_IMAGES_LIMIT,
+  Limits,
 } from '../../const';
 import {
   useAppDispatch,
@@ -266,7 +265,7 @@ describe('Component: OfferPage', () => {
 
   it('should render no more than allowed number of offer images', () => {
     const images = Array.from(
-      {length: OFFER_IMAGES_LIMIT + 2},
+      {length: Limits.OfferImages + 2},
       (_, index) => `img/offer-${index + 1}.jpg`,
     );
 
@@ -289,7 +288,7 @@ describe('Component: OfferPage', () => {
     });
 
     expect(renderedImages).toHaveLength(
-      OFFER_IMAGES_LIMIT,
+      Limits.OfferImages,
     );
 
     expect(renderedImages[0]).toHaveAttribute(
@@ -302,7 +301,7 @@ describe('Component: OfferPage', () => {
     const mockOffer = makeFakeOfferDetails('offer-id');
 
     const nearbyOffers = Array.from(
-      {length: NEARBY_OFFERS_LIMIT + 2},
+      {length: Limits.NearbyOffers + 2},
       (_, index) => makeFakeOffer(`nearby-${index + 1}`),
     );
 
@@ -317,10 +316,10 @@ describe('Component: OfferPage', () => {
 
     expect(
       screen.getAllByTestId('nearby-offer'),
-    ).toHaveLength(NEARBY_OFFERS_LIMIT);
+    ).toHaveLength(Limits.NearbyOffers);
 
     nearbyOffers
-      .slice(0, NEARBY_OFFERS_LIMIT)
+      .slice(0, Limits.NearbyOffers)
       .forEach((offer) => {
         expect(
           screen.getByText(offer.title),
@@ -329,16 +328,16 @@ describe('Component: OfferPage', () => {
 
     expect(
       screen.queryByText(
-        nearbyOffers[NEARBY_OFFERS_LIMIT].title,
+        nearbyOffers[Limits.NearbyOffers].title,
       ),
     ).not.toBeInTheDocument();
   });
 
-  it('should pass current offer and limited nearby offers to map', () => {
+  it('should pass current and limited nearby offers to map', () => {
     const mockOffer = makeFakeOfferDetails('offer-id');
 
     const nearbyOffers = Array.from(
-      {length: NEARBY_OFFERS_LIMIT + 2},
+      {length: Limits.NearbyOffers + 2},
       (_, index) => makeFakeOffer(`nearby-${index + 1}`),
     );
 
@@ -360,7 +359,7 @@ describe('Component: OfferPage', () => {
 
     expect(map).toHaveAttribute(
       'data-offers-count',
-      String(NEARBY_OFFERS_LIMIT + 1),
+      String(Limits.NearbyOffers + 1),
     );
 
     expect(map).toHaveClass('offer__map', 'map');

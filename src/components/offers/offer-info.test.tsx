@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { makeFakeOfferDetails } from '../../utils/mocks';
 import OfferInfo from './offer-info';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 vi.mock('./offer-favorite-button', () => ({
   default: ({offerId}: {offerId: string}) => (
@@ -38,7 +39,9 @@ describe('Component: OfferInfo', () => {
       }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText(mockOffer.type)).toBeInTheDocument();
+    expect(
+      screen.getByText(capitalizeFirstLetter(mockOffer.type)),
+    ).toBeInTheDocument();
     expect(screen.getByText(`€${mockOffer.price}`)).toBeInTheDocument();
     expect(screen.getByText(String(mockOffer.rating))).toBeInTheDocument();
     expect(screen.getByText(mockOffer.description)).toBeInTheDocument();

@@ -5,6 +5,7 @@ import { AppRoute, AuthorizationStatus, NameSpace } from '../../const';
 import { withHistory, withStore } from '../../utils/mock-component';
 import { makeFakeOffer, makeFakeStore } from '../../utils/mocks';
 import OfferCard from './offer-card';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 describe('Component: OfferCard', () => {
   it('should render offer information', () => {
@@ -28,7 +29,9 @@ describe('Component: OfferCard', () => {
     render(withStoreComponent);
 
     expect(screen.getByText(mockOffer.title)).toBeInTheDocument();
-    expect(screen.getByText(mockOffer.type)).toBeInTheDocument();
+    expect(
+      screen.getByText(capitalizeFirstLetter(mockOffer.type)),
+    ).toBeInTheDocument();
     expect(screen.getByText(`€${mockOffer.price}`)).toBeInTheDocument();
     expect(screen.getByAltText('Place image')).toHaveAttribute(
       'src',

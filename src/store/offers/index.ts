@@ -14,6 +14,8 @@ export {
   selectCurrentCityOffers,
   selectFavoriteOffers,
   selectFavoriteOffersCount,
+  selectIsOffersLoadingError,
+  selectFavoriteOffersLoadingErrorStatus,
 } from './offers-data.selectors';
 
 export {
@@ -23,4 +25,5 @@ export {
   selectOfferLoadingStatus,
   selectOfferNotFoundStatus,
   selectCurrentOfferIsFavorite,
+  selectOfferLoadingErrorStatus,
 } from './offer-data.selectors';

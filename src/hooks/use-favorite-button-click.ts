@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../const';
+import { AppRoute, AuthorizationStatus, FavoriteStatus } from '../const';
 import { changeFavoriteStatusAction } from '../store/api-actions';
 import { useAppDispatch, useAppSelector } from './index';
 import { selectAuthorizationStatus } from '../store/user-process';
@@ -18,7 +18,7 @@ export function useFavoriteButtonClick(offerId: string, isFavorite: boolean) {
 
     dispatch(changeFavoriteStatusAction({
       offerId,
-      status: isFavorite ? 0 : 1,
+      status: isFavorite ? FavoriteStatus.Removed : FavoriteStatus.Added,
     }));
   }, [authorizationStatus, dispatch, isFavorite, navigate, offerId]);
 }

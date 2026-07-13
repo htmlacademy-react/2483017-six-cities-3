@@ -10,6 +10,7 @@ export enum AuthorizationStatus {
   Auth = 'AUTH',
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
+  Error = 'ERROR',
 }
 
 export enum APIRoute {
@@ -22,13 +23,21 @@ export enum APIRoute {
 
 export const STAR_WIDTH_PERCENT = 20;
 
-export const URL_MARKER_DEFAULT = '/img/pin.svg';
+export const MarkerUrl = {
+  Default: '/img/pin.svg',
+  Current: '/img/pin-active.svg',
+} as const;
 
-export const URL_MARKER_CURRENT = '/img/pin-active.svg';
+export const Limits = {
+  OfferImages: 6,
+  NearbyOffers: 3,
+  Reviews: 10,
+} as const;
 
-export const NEARBY_OFFERS_LIMIT = 3;
-
-export const OFFER_IMAGES_LIMIT = 6;
+export const ReviewLength = {
+  Min: 50,
+  Max: 300,
+} as const;
 
 export const CITIES = [
   'Paris',
@@ -57,12 +66,6 @@ export const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities';
 
 export const REQUEST_TIMEOUT = 5000;
 
-export const MIN_REVIEW_LENGTH = 50;
-
-export const MAX_REVIEW_LENGTH = 300;
-
-export const REVIEWS_LIMIT = 10;
-
 export const SINGULAR_AMOUNT = 1;
 
 export enum NameSpace {
@@ -71,3 +74,18 @@ export enum NameSpace {
   Offers = 'OFFERS',
   Offer = 'OFFER',
 }
+
+export enum FavoriteStatus {
+  Removed = 0,
+  Added = 1,
+}
+
+export const UNKNOWN_ERROR_STATUS = 0;
+
+export const RATING_OPTIONS = [
+  { value: '5', title: 'perfect', id: '5-stars' },
+  { value: '4', title: 'good', id: '4-stars' },
+  { value: '3', title: 'not bad', id: '3-stars' },
+  { value: '2', title: 'badly', id: '2-stars' },
+  { value: '1', title: 'terribly', id: '1-stars' },
+] as const;

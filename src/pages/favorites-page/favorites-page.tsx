@@ -6,8 +6,12 @@ import { AppRoute } from '../../const';
 import Header from '../../components/header/header';
 import FavoritesList from '../../components/favorites/favorites-list';
 import { fetchFavoriteOffersAction } from '../../store/api-actions';
-import { selectFavoriteOffers } from '../../store/offers';
+import {
+  selectFavoriteOffers,
+  selectFavoriteOffersLoadingErrorStatus,
+} from '../../store/offers';
 import FavoritesEmpty from '../../components/favorites/favorites-empty';
+import ServerError from '../../components/server-error/server-error';
 
 function FavoritesPage() {
   const dispatch = useAppDispatch();
@@ -15,9 +19,25 @@ function FavoritesPage() {
   const favoriteOffers = useAppSelector(selectFavoriteOffers);
   const isFavoritesEmpty = favoriteOffers.length === 0;
 
+  const isFavoriteOffersLoadingError = useAppSelector(
+    selectFavoriteOffersLoadingErrorStatus,
+  );
+
   useEffect(() => {
     dispatch(fetchFavoriteOffersAction());
   }, [dispatch]);
+
+  if (isFavoriteOffersLoadingError) {
+    return (
+      <div className="page">
+        <Header />
+
+        <main className="page__main page__main--favorites">
+          <ServerError />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div

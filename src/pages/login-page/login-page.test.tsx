@@ -11,7 +11,6 @@ import {
 } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { withHistory } from '../../utils/mock-component';
-import { makeFakeAuthData } from '../../utils/mocks';
 import LoginPage from './login-page';
 
 vi.mock('../../hooks', () => ({
@@ -21,6 +20,14 @@ vi.mock('../../hooks', () => ({
 
 vi.mock('../../store/api-actions', () => ({
   loginAction: vi.fn(),
+}));
+
+vi.mock('../../components/random-city/random-city', () => ({
+  default: () => (
+    <div data-testid="random-city">
+      Random city
+    </div>
+  ),
 }));
 
 describe('Component: LoginPage', () => {
@@ -36,10 +43,16 @@ describe('Component: LoginPage', () => {
     );
   });
 
-  it('should render login form', () => {
+  it('should render login form with valid input attributes', () => {
     render(
       withHistory(<LoginPage />),
     );
+
+    const emailInput = screen.getByRole('textbox', {
+      name: 'E-mail',
+    });
+
+    const passwordInput = screen.getByLabelText('Password');
 
     expect(
       screen.getByRole('heading', {
@@ -48,15 +61,17 @@ describe('Component: LoginPage', () => {
       }),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('textbox', {
-        name: 'E-mail',
-      }),
-    ).toBeInTheDocument();
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toHaveAttribute('type', 'email');
+    expect(emailInput).toBeRequired();
 
-    expect(
-      screen.getByLabelText('Password'),
-    ).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    expect(passwordInput).toBeRequired();
+    expect(passwordInput).toHaveAttribute(
+      'pattern',
+      '^(?=.*[A-Za-z])(?=.*\\d).+$',
+    );
 
     expect(
       screen.getByRole('button', {
@@ -65,7 +80,7 @@ describe('Component: LoginPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render links to main page', () => {
+  it('should render link to main page and random city component', () => {
     render(
       withHistory(<LoginPage />),
     );
@@ -82,18 +97,16 @@ describe('Component: LoginPage', () => {
     );
 
     expect(
-      screen.getByRole('link', {
-        name: 'Amsterdam',
-      }),
-    ).toHaveAttribute(
-      'href',
-      AppRoute.Main,
-    );
+      screen.getByTestId('random-city'),
+    ).toBeInTheDocument();
   });
 
   it('should dispatch "loginAction" with entered email and password when user submits form', async () => {
     const user = userEvent.setup();
-    const mockAuthData = makeFakeAuthData();
+    const mockAuthData = {
+      email: 'test@test.com',
+      password: 'password1',
+    };
 
     render(
       withHistory(<LoginPage />),

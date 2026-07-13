@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useAppSelector } from '../../hooks';
-import { SortOption } from '../../const';
+import { SINGULAR_AMOUNT, SortOption } from '../../const';
 import { getSortedOffers } from '../../utils';
 import { useActiveOffer } from '../../hooks/use-active-offer';
 import SortingOptions from '../sorting-options/sorting-options';
@@ -41,7 +41,8 @@ function OffersSection() {
           <h2 className="visually-hidden">Places</h2>
 
           <b className="places__found">
-            {currentCityOffers.length} places to stay in {cityName}
+            {currentCityOffers.length}{' '}
+            {currentCityOffers.length === SINGULAR_AMOUNT ? 'place' : 'places'} to stay in {cityName}
           </b>
 
           <SortingOptions
