@@ -5,6 +5,7 @@ import { Offer } from '../../types/offer';
 import { withHistory, withStore } from '../../utils/mock-component';
 import { makeFakeOffer, makeFakeStore } from '../../utils/mocks';
 import FavoritesList from './favorites-list';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 vi.mock('../offers/card-favorite-button', () => ({
   default: ({
@@ -92,7 +93,7 @@ describe('Component: FavoritesList', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(mockOffer.type),
+      screen.getByText(capitalizeFirstLetter(mockOffer.type)),
     ).toBeInTheDocument();
 
     expect(

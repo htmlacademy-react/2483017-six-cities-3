@@ -12,12 +12,12 @@ function HeaderNavigation() {
   const favoriteOffersCount = useAppSelector(selectFavoriteOffersCount);
   const userEmail = useAppSelector(selectUserEmail);
 
-  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+  const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;
 
   return (
     <nav className="header__nav">
       <ul className="header__nav-list">
-        {isAuth ? (
+        {isAuthorized ? (
           <>
             <li className="header__nav-item user">
               <Link

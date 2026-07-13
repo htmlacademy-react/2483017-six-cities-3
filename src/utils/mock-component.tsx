@@ -31,8 +31,8 @@ export function withStore(
 ): ComponentWithMockStore {
   const axios = createAPI();
   const mockAxiosAdapter = new MockAdapter(axios);
-  const middleware = [thunk.withExtraArgument(axios)];
-  const mockStoreCreator = configureMockStore<State, Action<string>, AppThunkDispatch>(middleware);
+  const middlewareList = [thunk.withExtraArgument(axios)];
+  const mockStoreCreator = configureMockStore<State, Action<string>, AppThunkDispatch>(middlewareList);
   const mockStore = mockStoreCreator(initialState);
 
   return ({

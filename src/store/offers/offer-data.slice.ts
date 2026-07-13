@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { StatusCodes } from 'http-status-codes';
 import { NameSpace } from '../../const';
 import { Offer, OfferDetails } from '../../types/offer';
 import { Review } from '../../types/review';
@@ -16,6 +17,7 @@ type OfferData = {
   reviews: Review[];
   isOfferLoading: boolean;
   isOfferNotFound: boolean;
+  isOfferLoadingError: boolean;
 };
 
 const initialState: OfferData = {
@@ -24,6 +26,7 @@ const initialState: OfferData = {
   reviews: [],
   isOfferLoading: false,
   isOfferNotFound: false,
+  isOfferLoadingError: false,
 };
 
 export const offerData = createSlice({
@@ -37,16 +40,20 @@ export const offerData = createSlice({
       .addCase(fetchOfferAction.pending, (state) => {
         state.isOfferLoading = true;
         state.isOfferNotFound = false;
+        state.isOfferLoadingError = false;
       })
       .addCase(fetchOfferAction.fulfilled, (state, action) => {
         state.currentOffer = action.payload;
         state.isOfferLoading = false;
         state.isOfferNotFound = false;
+        state.isOfferLoadingError = false;
       })
-      .addCase(fetchOfferAction.rejected, (state) => {
+      .addCase(fetchOfferAction.rejected, (state, action) => {
         state.currentOffer = null;
         state.isOfferLoading = false;
-        state.isOfferNotFound = true;
+
+        state.isOfferNotFound = action.payload === StatusCodes.NOT_FOUND;
+        state.isOfferLoadingError = action.payload !== StatusCodes.NOT_FOUND;
       })
       .addCase(fetchNearbyOffersAction.fulfilled, (state, action) => {
         state.nearbyOffers = action.payload;

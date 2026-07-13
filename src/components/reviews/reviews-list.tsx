@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Review as ReviewType } from '../../types/review';
 import Review from '../reviews/review';
-import { REVIEWS_LIMIT } from '../../const';
+import { Limits } from '../../const';
 
 type ReviewsListProps = {
   reviews: ReviewType[];
@@ -13,7 +13,7 @@ function ReviewsList({reviews}: ReviewsListProps) {
       .sort((reviewA, reviewB) =>
         new Date(reviewB.date).getTime() - new Date(reviewA.date).getTime()
       )
-      .slice(0, REVIEWS_LIMIT),
+      .slice(0, Limits.Reviews),
     [reviews]
   );
 

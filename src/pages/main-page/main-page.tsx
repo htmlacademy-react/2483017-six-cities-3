@@ -4,12 +4,20 @@ import Header from '../../components/header/header';
 import OffersSection from '../../components/offers/offers-section';
 import { useAppSelector } from '../../hooks';
 import Spinner from '../../components/spinner/spinner';
-import { selectCurrentCityOffers, selectOffersLoadingStatus } from '../../store/offers';
+import {
+  selectCurrentCityOffers,
+  selectOffersLoadingStatus,
+  selectIsOffersLoadingError,
+} from '../../store/offers';
+import ServerError from '../../components/server-error/server-error';
 
 function MainPage() {
   const isOffersLoading = useAppSelector(selectOffersLoadingStatus);
   const currentCityOffers = useAppSelector(selectCurrentCityOffers);
   const isEmpty = currentCityOffers.length === 0;
+  const isOffersLoadingError = useAppSelector(
+    selectIsOffersLoadingError
+  );
 
   if (isOffersLoading) {
     return (
@@ -18,6 +26,18 @@ function MainPage() {
 
         <main className="page__main page__main--index">
           <Spinner />
+        </main>
+      </div>
+    );
+  }
+
+  if (isOffersLoadingError) {
+    return (
+      <div className="page page--gray page--main">
+        <Header />
+
+        <main className="page__main page__main--index">
+          <ServerError />
         </main>
       </div>
     );

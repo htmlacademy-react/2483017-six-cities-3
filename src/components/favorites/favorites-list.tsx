@@ -1,14 +1,22 @@
 import { useMemo } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectFavoriteOffers } from '../../store/offers';
 import CardFavoriteButton from '../offers/card-favorite-button';
 import { getFavoriteOffersByCity } from '../../utils';
+import { capitalizeFirstLetter } from '../../utils/common';
+import { changeCity } from '../../store/app-process';
 
 
 function FavoritesList() {
   const favoriteOffers = useAppSelector(selectFavoriteOffers);
+
+  const dispatch = useAppDispatch();
+
+  const handleCityClick = (selectedCityName: string) => {
+    dispatch(changeCity(selectedCityName));
+  };
 
   const favoriteOffersByCity = useMemo(
     () => getFavoriteOffersByCity(favoriteOffers),
@@ -24,9 +32,13 @@ function FavoritesList() {
         <li className="favorites__locations-items" key={city}>
           <div className="favorites__locations locations locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
+              <Link
+                className="locations__item-link"
+                to={AppRoute.Main}
+                onClick={() => handleCityClick(city)}
+              >
                 <span>{city}</span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -69,7 +81,11 @@ function FavoritesList() {
 
                     <div className="place-card__rating rating">
                       <div className="place-card__stars rating__stars">
-                        <span style={{width: `${offer.rating * STAR_WIDTH_PERCENT}%`}}></span>
+                        <span style={{
+                          width: `${Math.round(offer.rating) * STAR_WIDTH_PERCENT}%`
+                        }}
+                        >
+                        </span>
                         <span className="visually-hidden">Rating</span>
                       </div>
                     </div>
@@ -78,7 +94,7 @@ function FavoritesList() {
                       <Link to={offerPath}>{offer.title}</Link>
                     </h2>
 
-                    <p className="place-card__type">{offer.type}</p>
+                    <p className="place-card__type">{capitalizeFirstLetter(offer.type)}</p>
                   </div>
                 </article>
               );

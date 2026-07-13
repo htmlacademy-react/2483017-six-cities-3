@@ -4,6 +4,7 @@ import { AppRoute } from '../../const';
 import { makeFakeOffer } from '../../utils/mocks';
 import { withHistory } from '../../utils/mock-component';
 import NearbyOffer from './nearby-offer';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 vi.mock('./card-favorite-button', () => ({
   default: ({
@@ -39,7 +40,7 @@ describe('Component: NearbyOffer', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(mockOffer.type),
+      screen.getByText(capitalizeFirstLetter(mockOffer.type)),
     ).toBeInTheDocument();
 
     expect(

@@ -4,6 +4,7 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { selectAuthorizationStatus } from '../../store/user-process';
+import RandomCity from '../../components/random-city/random-city';
 
 function LoginPage() {
   const dispatch = useAppDispatch();
@@ -88,19 +89,15 @@ function LoginPage() {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  pattern="^(?=.*[A-Za-z])(?=.*\d).+$"
+                  title="Password must contain at least one letter and one number"
                   required
                 />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>
             </form>
           </section>
-          <section className="locations locations--login locations--current">
-            <div className="locations__item">
-              <Link className="locations__item-link" to={AppRoute.Main}>
-                <span>Amsterdam</span>
-              </Link>
-            </div>
-          </section>
+          <RandomCity />
         </div>
       </main>
     </div>

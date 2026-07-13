@@ -3,6 +3,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
 import { Offer } from '../../types/offer';
 import CardFavoriteButton from './card-favorite-button';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 type NearbyOfferProps = {
   offer: Offer;
@@ -59,7 +60,7 @@ function NearbyOffer({offer}: NearbyOfferProps) {
           <div className="place-card__stars rating__stars">
             <span
               style={{
-                width: `${rating * STAR_WIDTH_PERCENT}%`,
+                width: `${Math.round(rating) * STAR_WIDTH_PERCENT}%`,
               }}
             >
             </span>
@@ -74,7 +75,7 @@ function NearbyOffer({offer}: NearbyOfferProps) {
         </h2>
 
         <p className="place-card__type">
-          {type}
+          {capitalizeFirstLetter(type)}
         </p>
       </div>
     </article>

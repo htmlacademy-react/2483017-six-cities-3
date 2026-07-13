@@ -2,24 +2,24 @@ import { useRef, useEffect } from 'react';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import useMap from '../../hooks/use-map';
 import { City, Offer } from '../../types/offer';
-import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
+import { MarkerUrl } from '../../const';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
   city: City;
   offers: Offer[];
-  selectedOffer: Offer | undefined;
+  selectedOffer?: Offer;
   className?: string;
 };
 
 const defaultCustomIcon = new Icon({
-  iconUrl: URL_MARKER_DEFAULT,
+  iconUrl: MarkerUrl.Default,
   iconSize: [40, 40],
   iconAnchor: [20, 40]
 });
 
 const currentCustomIcon = new Icon({
-  iconUrl: URL_MARKER_CURRENT,
+  iconUrl: MarkerUrl.Current,
   iconSize: [40, 40],
   iconAnchor: [20, 40]
 });

@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
+import { AppRoute } from '../../const';
 import { withHistory } from '../../utils/mock-component';
 import NotFoundPage from './not-found-page';
+
+vi.mock('../../components/header/header', () => ({
+  default: () => <div>Header</div>,
+}));
 
 describe('Component: NotFoundPage', () => {
   it('should render correct', () => {
@@ -10,8 +15,23 @@ describe('Component: NotFoundPage', () => {
 
     render(withHistory(<NotFoundPage />));
 
-    expect(screen.getByText(expectedTitleText)).toBeInTheDocument();
-    expect(screen.getByText(expectedDescriptionText)).toBeInTheDocument();
-    expect(screen.getByText(expectedLinkText)).toBeInTheDocument();
+    expect(screen.getByText('Header')).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: expectedTitleText,
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(expectedDescriptionText)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('link', {
+        name: expectedLinkText,
+      })
+    ).toHaveAttribute('href', AppRoute.Main);
   });
 });

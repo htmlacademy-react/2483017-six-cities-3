@@ -1,8 +1,10 @@
+import classNames from 'classnames';
 import { memo } from 'react';
 import { OfferDetails } from '../../types/offer';
-import { STAR_WIDTH_PERCENT } from '../../const';
+import { SINGULAR_AMOUNT, STAR_WIDTH_PERCENT } from '../../const';
 import OfferFavoriteButton from './offer-favorite-button';
 import ReviewsSection from '../reviews/reviews-section';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 type OfferInfoProps = {
   offer: OfferDetails ;
@@ -23,8 +25,8 @@ function OfferInfo({offer}: OfferInfoProps) {
     maxAdults,
   } = offer;
 
-  const bedroomsText = bedrooms === 1 ? 'Bedroom' : 'Bedrooms';
-  const adultsText = maxAdults === 1 ? 'adult' : 'adults';
+  const bedroomsText = bedrooms === SINGULAR_AMOUNT ? 'Bedroom' : 'Bedrooms';
+  const adultsText = maxAdults === SINGULAR_AMOUNT ? 'adult' : 'adults';
 
   return (
     <div className="offer__container container">
@@ -45,7 +47,10 @@ function OfferInfo({offer}: OfferInfoProps) {
 
         <div className="offer__rating rating">
           <div className="offer__stars rating__stars">
-            <span style={{width: `${rating * STAR_WIDTH_PERCENT}%`}} />
+            <span style={{
+              width: `${Math.round(rating) * STAR_WIDTH_PERCENT}%`,
+            }}
+            />
             <span className="visually-hidden">Rating</span>
           </div>
           <span className="offer__rating-value rating__value">
@@ -55,7 +60,7 @@ function OfferInfo({offer}: OfferInfoProps) {
 
         <ul className="offer__features">
           <li className="offer__feature offer__feature--entire">
-            {type}
+            {capitalizeFirstLetter(type)}
           </li>
           <li className="offer__feature offer__feature--bedrooms">
             {bedrooms} {bedroomsText}
@@ -93,7 +98,15 @@ function OfferInfo({offer}: OfferInfoProps) {
           </h2>
 
           <div className="offer__host-user user">
-            <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+            <div
+              className={classNames(
+                'offer__avatar-wrapper',
+                'user__avatar-wrapper',
+                {
+                  'offer__avatar-wrapper--pro': host.isPro,
+                }
+              )}
+            >
               <img
                 className="offer__avatar user__avatar"
                 src={host.avatarUrl}

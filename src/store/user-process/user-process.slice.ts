@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { StatusCodes } from 'http-status-codes';
 import { AuthorizationStatus, NameSpace } from '../../const';
 import {
   checkAuthAction,
@@ -26,9 +27,13 @@ export const userProcess = createSlice({
         state.authorizationStatus = AuthorizationStatus.Auth;
         state.userEmail = action.payload.email;
       })
-      .addCase(checkAuthAction.rejected, (state) => {
-        state.authorizationStatus = AuthorizationStatus.NoAuth;
-        state.userEmail = '';
+      .addCase(checkAuthAction.rejected, (state, action) => {
+        if (action.payload === StatusCodes.UNAUTHORIZED) {
+          state.authorizationStatus = AuthorizationStatus.NoAuth;
+          state.userEmail = '';
+        } else {
+          state.authorizationStatus = AuthorizationStatus.Error;
+        }
       })
       .addCase(loginAction.fulfilled, (state, action) => {
         state.authorizationStatus = AuthorizationStatus.Auth;

@@ -21,3 +21,11 @@ export const selectFavoriteOffersCount = createSelector(
   [selectFavoriteOffers],
   (favoriteOffers) => favoriteOffers.length
 );
+
+export const selectIsOffersLoadingError = (
+  state: State
+): boolean => state[NameSpace.Offers].isOffersLoadingError;
+
+export const selectFavoriteOffersLoadingErrorStatus = (
+  state: State,
+) => state[NameSpace.Offers].isFavoriteOffersLoadingError;

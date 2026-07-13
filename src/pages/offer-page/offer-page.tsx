@@ -1,9 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
-import {
-  NEARBY_OFFERS_LIMIT,
-  OFFER_IMAGES_LIMIT,
-} from '../../const';
+import { Limits } from '../../const';
 import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/offers/nearby-offers-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -19,9 +16,11 @@ import {
   selectNearbyOffers,
   selectOfferLoadingStatus,
   selectOfferNotFoundStatus,
+  selectOfferLoadingErrorStatus,
   resetOfferData,
 } from '../../store/offers';
 import NotFoundPage from '../not-found-page/not-found-page';
+import ServerError from '../../components/server-error/server-error';
 
 function OfferPage() {
   const dispatch = useAppDispatch();
@@ -31,6 +30,10 @@ function OfferPage() {
   const nearbyOffers = useAppSelector(selectNearbyOffers);
   const isOfferLoading = useAppSelector(selectOfferLoadingStatus);
   const isOfferNotFound = useAppSelector(selectOfferNotFoundStatus);
+
+  const isOfferLoadingError = useAppSelector(
+    selectOfferLoadingErrorStatus,
+  );
 
   useEffect(() => {
     dispatch(resetOfferData());
@@ -43,7 +46,7 @@ function OfferPage() {
   }, [id, dispatch]);
 
   const nearbyOffersLimited = useMemo(
-    () => nearbyOffers.slice(0, NEARBY_OFFERS_LIMIT),
+    () => nearbyOffers.slice(0, Limits.NearbyOffers),
     [nearbyOffers]
   );
 
@@ -56,6 +59,18 @@ function OfferPage() {
     return <NotFoundPage />;
   }
 
+  if (isOfferLoadingError) {
+    return (
+      <div className="page">
+        <Header />
+
+        <main className="page__main page__main--offer">
+          <ServerError />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <Header />
@@ -66,7 +81,7 @@ function OfferPage() {
             <section className="offer">
               <div className="offer__gallery-container container">
                 <div className="offer__gallery">
-                  {currentOffer.images.slice(0, OFFER_IMAGES_LIMIT).map((image) => (
+                  {currentOffer.images.slice(0, Limits.OfferImages).map((image) => (
                     <div className="offer__image-wrapper" key={image}>
                       <img
                         className="offer__image"

@@ -97,6 +97,8 @@ export const makeFakeStore = (initialState?: PartialState): State => ({
     offers: [],
     favoriteOffers: [],
     isOffersLoading: false,
+    isOffersLoadingError: false,
+    isFavoriteOffersLoadingError: false,
     ...initialState?.[NameSpace.Offers],
   },
   [NameSpace.Offer]: {
@@ -105,6 +107,7 @@ export const makeFakeStore = (initialState?: PartialState): State => ({
     reviews: [],
     isOfferLoading: false,
     isOfferNotFound: false,
+    isOfferLoadingError: false,
     ...initialState?.[NameSpace.Offer],
   },
 });

@@ -2,8 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   APIRoute,
-  MAX_REVIEW_LENGTH,
-  MIN_REVIEW_LENGTH,
+  ReviewLength,
 } from '../../const';
 import { sendReviewAction } from '../../store/api-actions';
 import { withStore } from '../../utils/mock-component';
@@ -59,7 +58,7 @@ describe('Component: ReviewForm', () => {
 
   it('should keep submit button disabled when rating is not selected', async () => {
     const user = userEvent.setup();
-    const validReview = 'a'.repeat(MIN_REVIEW_LENGTH);
+    const validReview = 'a'.repeat(ReviewLength.Min);
 
     const {withStoreComponent} = withStore(
       <ReviewForm offerId={offerId} />,
@@ -84,7 +83,7 @@ describe('Component: ReviewForm', () => {
 
   it('should keep submit button disabled when review is too short', async () => {
     const user = userEvent.setup();
-    const shortReview = 'a'.repeat(MIN_REVIEW_LENGTH - 1);
+    const shortReview = 'a'.repeat(ReviewLength.Min - 1);
 
     const {withStoreComponent} = withStore(
       <ReviewForm offerId={offerId} />,
@@ -113,7 +112,7 @@ describe('Component: ReviewForm', () => {
 
   it('should enable submit button when rating and valid review are entered', async () => {
     const user = userEvent.setup();
-    const validReview = 'a'.repeat(MIN_REVIEW_LENGTH);
+    const validReview = 'a'.repeat(ReviewLength.Min);
 
     const {withStoreComponent} = withStore(
       <ReviewForm offerId={offerId} />,
@@ -142,7 +141,7 @@ describe('Component: ReviewForm', () => {
 
   it('should keep submit button disabled when review is too long', async () => {
     const user = userEvent.setup();
-    const longReview = 'a'.repeat(MAX_REVIEW_LENGTH + 1);
+    const longReview = 'a'.repeat(ReviewLength.Max + 1);
 
     const {withStoreComponent} = withStore(
       <ReviewForm offerId={offerId} />,
@@ -172,7 +171,7 @@ describe('Component: ReviewForm', () => {
   it('should dispatch "sendReviewAction" with entered data when user submits valid form', async () => {
     const user = userEvent.setup();
     const rating = 5;
-    const validReview = 'a'.repeat(MIN_REVIEW_LENGTH);
+    const validReview = 'a'.repeat(ReviewLength.Min);
     const mockReview = makeFakeReview();
 
     const {
@@ -225,7 +224,7 @@ describe('Component: ReviewForm', () => {
   it('should clear review and rating after successful submit', async () => {
     const user = userEvent.setup();
     const rating = 5;
-    const validReview = 'a'.repeat(MIN_REVIEW_LENGTH);
+    const validReview = 'a'.repeat(ReviewLength.Min);
     const mockReview = makeFakeReview();
 
     const {
@@ -274,7 +273,7 @@ describe('Component: ReviewForm', () => {
   it('should show error and keep entered data when server response is 400', async () => {
     const user = userEvent.setup();
     const rating = 4;
-    const validReview = 'a'.repeat(MIN_REVIEW_LENGTH);
+    const validReview = 'a'.repeat(ReviewLength.Min);
 
     const {
       withStoreComponent,

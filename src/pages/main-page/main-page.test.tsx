@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { useAppSelector } from '../../hooks';
+import {render, screen} from '@testing-library/react';
+import {useAppSelector} from '../../hooks';
 import {
   selectCurrentCityOffers,
+  selectIsOffersLoadingError,
   selectOffersLoadingStatus,
 } from '../../store/offers';
-import { makeFakeOffer } from '../../utils/mocks';
+import {makeFakeOffer} from '../../utils/mocks';
 import MainPage from './main-page';
 
 vi.mock('../../hooks', () => ({
@@ -12,7 +13,7 @@ vi.mock('../../hooks', () => ({
 }));
 
 vi.mock('../../components/header/header', () => ({
-  default: ({ isMainPage }: { isMainPage?: boolean }) => (
+  default: ({isMainPage}: {isMainPage?: boolean}) => (
     <header
       data-testid="header"
       data-is-main-page={String(Boolean(isMainPage))}
@@ -46,10 +47,17 @@ vi.mock('../../components/spinner/spinner', () => ({
   ),
 }));
 
-const mockSelectors = (
-  isLoading: boolean,
-  offers = [makeFakeOffer()],
-) => {
+type MockSelectorsData = {
+  isLoading?: boolean;
+  isLoadingError?: boolean;
+  offers?: ReturnType<typeof makeFakeOffer>[];
+};
+
+const mockSelectors = ({
+  isLoading = false,
+  isLoadingError = false,
+  offers = [makeFakeOffer('1')],
+}: MockSelectorsData = {}) => {
   vi.mocked(useAppSelector).mockImplementation((selector) => {
     if (selector === selectOffersLoadingStatus) {
       return isLoading;
@@ -59,7 +67,11 @@ const mockSelectors = (
       return offers;
     }
 
-    return undefined;
+    if (selector === selectIsOffersLoadingError) {
+      return isLoadingError;
+    }
+
+    throw new Error('Unknown selector');
   });
 };
 
@@ -69,12 +81,20 @@ describe('Component: MainPage', () => {
   });
 
   it('should render spinner while offers are loading', () => {
-    mockSelectors(true, []);
+    mockSelectors({
+      isLoading: true,
+      offers: [],
+    });
 
     render(<MainPage />);
 
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
-    expect(screen.getByTestId('header')).toHaveAttribute(
+    expect(
+      screen.getByTestId('spinner'),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByTestId('header'),
+    ).toHaveAttribute(
       'data-is-main-page',
       'false',
     );
@@ -88,11 +108,47 @@ describe('Component: MainPage', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('should render error message when offers loading failed', () => {
+    mockSelectors({
+      isLoadingError: true,
+      offers: [],
+    });
+
+    render(<MainPage />);
+
+    expect(
+      screen.getByRole('alert'),
+    ).toHaveTextContent(
+      'Failed to load data. Please try again later.',
+    );
+
+    expect(
+      screen.getByTestId('header'),
+    ).toHaveAttribute(
+      'data-is-main-page',
+      'false',
+    );
+
+    expect(
+      screen.queryByTestId('spinner'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByTestId('cities-list'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByTestId('offers-section'),
+    ).not.toBeInTheDocument();
+  });
+
   it('should render main page content when offers are loaded', () => {
-    mockSelectors(false, [
-      makeFakeOffer('1'),
-      makeFakeOffer('2'),
-    ]);
+    mockSelectors({
+      offers: [
+        makeFakeOffer('1'),
+        makeFakeOffer('2'),
+      ],
+    });
 
     render(<MainPage />);
 
@@ -103,10 +159,17 @@ describe('Component: MainPage', () => {
       }),
     ).toBeInTheDocument();
 
-    expect(screen.getByTestId('cities-list')).toBeInTheDocument();
-    expect(screen.getByTestId('offers-section')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('cities-list'),
+    ).toBeInTheDocument();
 
-    expect(screen.getByTestId('header')).toHaveAttribute(
+    expect(
+      screen.getByTestId('offers-section'),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByTestId('header'),
+    ).toHaveAttribute(
       'data-is-main-page',
       'true',
     );
@@ -114,24 +177,36 @@ describe('Component: MainPage', () => {
     expect(
       screen.queryByTestId('spinner'),
     ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByText(
+        'Failed to load offers. Please try again later.',
+      ),
+    ).not.toBeInTheDocument();
   });
 
   it('should add empty class when current city has no offers', () => {
-    mockSelectors(false, []);
+    mockSelectors({
+      offers: [],
+    });
 
-    const { container } = render(<MainPage />);
+    const {container} = render(<MainPage />);
 
-    expect(container.querySelector('main')).toHaveClass(
+    expect(
+      container.querySelector('main'),
+    ).toHaveClass(
       'page__main--index-empty',
     );
   });
 
   it('should not add empty class when current city has offers', () => {
-    mockSelectors(false);
+    mockSelectors();
 
-    const { container } = render(<MainPage />);
+    const {container} = render(<MainPage />);
 
-    expect(container.querySelector('main')).not.toHaveClass(
+    expect(
+      container.querySelector('main'),
+    ).not.toHaveClass(
       'page__main--index-empty',
     );
   });

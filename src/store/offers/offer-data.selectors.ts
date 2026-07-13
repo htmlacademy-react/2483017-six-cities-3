@@ -21,3 +21,6 @@ export const selectCurrentOfferIsFavorite = createSelector(
   [selectCurrentOffer],
   (currentOffer) => currentOffer?.isFavorite ?? false
 );
+
+export const selectOfferLoadingErrorStatus = (state: State) =>
+  state[NameSpace.Offer].isOfferLoadingError;

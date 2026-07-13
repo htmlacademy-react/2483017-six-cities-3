@@ -3,6 +3,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
 import { Offer } from '../../types/offer';
 import CardFavoriteButton from './card-favorite-button';
+import { capitalizeFirstLetter } from '../../utils/common';
 
 type OfferCardProps = {
   offer: Offer;
@@ -62,14 +63,20 @@ function OfferCard({
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${rating * STAR_WIDTH_PERCENT}%`}}></span>
+            <span style={{
+              width: `${Math.round(rating) * STAR_WIDTH_PERCENT}%`
+            }}
+            >
+            </span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <Link to={offerPath}>{title}</Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">
+          {capitalizeFirstLetter(type)}
+        </p>
       </div>
     </article>
   );
