@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import CitiesList from '../../components/cities-list/cities-list';
 import Header from '../../components/header/header';
-import OffersSection from '../../components/offers/offers-section';
+import { OffersSection } from '../../components/offers';
 import { useAppSelector } from '../../hooks';
 import Spinner from '../../components/spinner/spinner';
 import {

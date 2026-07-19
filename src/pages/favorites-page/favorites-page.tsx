@@ -4,13 +4,12 @@ import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { AppRoute } from '../../const';
 import Header from '../../components/header/header';
-import FavoritesList from '../../components/favorites/favorites-list';
+import { FavoritesList, FavoritesEmpty } from '../../components/favorites';
 import { fetchFavoriteOffersAction } from '../../store/api-actions';
 import {
   selectFavoriteOffers,
   selectFavoriteOffersLoadingErrorStatus,
 } from '../../store/offers';
-import FavoritesEmpty from '../../components/favorites/favorites-empty';
 import ServerError from '../../components/server-error/server-error';
 
 function FavoritesPage() {

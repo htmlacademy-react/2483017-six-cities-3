@@ -28,7 +28,7 @@ export const MarkerUrl = {
   Current: '/img/pin-active.svg',
 } as const;
 
-export const Limits = {
+export const Limit = {
   OfferImages: 6,
   NearbyOffers: 3,
   Reviews: 10,

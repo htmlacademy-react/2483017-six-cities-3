@@ -10,6 +10,7 @@ import {
   fetchReviewsAction,
   sendReviewAction,
 } from '../api-actions';
+import { resetOffersFavoriteStatus } from './offers-data.slice';
 
 type OfferData = {
   currentOffer: OfferDetails | null;
@@ -63,6 +64,16 @@ export const offerData = createSlice({
       })
       .addCase(sendReviewAction.fulfilled, (state, action) => {
         state.reviews = [action.payload, ...state.reviews];
+      })
+      .addCase(resetOffersFavoriteStatus, (state) => {
+        state.nearbyOffers = state.nearbyOffers.map((offer) => ({
+          ...offer,
+          isFavorite: false,
+        }));
+
+        if (state.currentOffer) {
+          state.currentOffer.isFavorite = false;
+        }
       })
       .addCase(changeFavoriteStatusAction.fulfilled, (state, action) => {
         const updatedOffer = action.payload;

@@ -12,13 +12,13 @@ type MapProps = {
   className?: string;
 };
 
-const defaultCustomIcon = new Icon({
+const DEFAULT_CUSTOM_ICON = new Icon({
   iconUrl: MarkerUrl.Default,
   iconSize: [40, 40],
   iconAnchor: [20, 40]
 });
 
-const currentCustomIcon = new Icon({
+const CURRENT_CUSTOM_ICON = new Icon({
   iconUrl: MarkerUrl.Current,
   iconSize: [40, 40],
   iconAnchor: [20, 40]
@@ -41,8 +41,8 @@ function Map({city, offers, selectedOffer, className = 'cities__map map'}: MapPr
         marker
           .setIcon(
             selectedOffer !== undefined && offer.id === selectedOffer.id
-              ? currentCustomIcon
-              : defaultCustomIcon
+              ? CURRENT_CUSTOM_ICON
+              : DEFAULT_CUSTOM_ICON
           )
           .addTo(markerLayer);
       });

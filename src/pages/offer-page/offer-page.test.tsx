@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 import {
   AppRoute,
-  Limits,
+  Limit,
 } from '../../const';
 import {
   useAppDispatch,
@@ -265,7 +265,7 @@ describe('Component: OfferPage', () => {
 
   it('should render no more than allowed number of offer images', () => {
     const images = Array.from(
-      {length: Limits.OfferImages + 2},
+      {length: Limit.OfferImages + 2},
       (_, index) => `img/offer-${index + 1}.jpg`,
     );
 
@@ -288,7 +288,7 @@ describe('Component: OfferPage', () => {
     });
 
     expect(renderedImages).toHaveLength(
-      Limits.OfferImages,
+      Limit.OfferImages,
     );
 
     expect(renderedImages[0]).toHaveAttribute(
@@ -301,7 +301,7 @@ describe('Component: OfferPage', () => {
     const mockOffer = makeFakeOfferDetails('offer-id');
 
     const nearbyOffers = Array.from(
-      {length: Limits.NearbyOffers + 2},
+      {length: Limit.NearbyOffers + 2},
       (_, index) => makeFakeOffer(`nearby-${index + 1}`),
     );
 
@@ -316,10 +316,10 @@ describe('Component: OfferPage', () => {
 
     expect(
       screen.getAllByTestId('nearby-offer'),
-    ).toHaveLength(Limits.NearbyOffers);
+    ).toHaveLength(Limit.NearbyOffers);
 
     nearbyOffers
-      .slice(0, Limits.NearbyOffers)
+      .slice(0, Limit.NearbyOffers)
       .forEach((offer) => {
         expect(
           screen.getByText(offer.title),
@@ -328,7 +328,7 @@ describe('Component: OfferPage', () => {
 
     expect(
       screen.queryByText(
-        nearbyOffers[Limits.NearbyOffers].title,
+        nearbyOffers[Limit.NearbyOffers].title,
       ),
     ).not.toBeInTheDocument();
   });
@@ -337,7 +337,7 @@ describe('Component: OfferPage', () => {
     const mockOffer = makeFakeOfferDetails('offer-id');
 
     const nearbyOffers = Array.from(
-      {length: Limits.NearbyOffers + 2},
+      {length: Limit.NearbyOffers + 2},
       (_, index) => makeFakeOffer(`nearby-${index + 1}`),
     );
 
@@ -359,7 +359,7 @@ describe('Component: OfferPage', () => {
 
     expect(map).toHaveAttribute(
       'data-offers-count',
-      String(Limits.NearbyOffers + 1),
+      String(Limit.NearbyOffers + 1),
     );
 
     expect(map).toHaveClass('offer__map', 'map');

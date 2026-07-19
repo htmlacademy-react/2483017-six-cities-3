@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
-import { Limits } from '../../const';
+import { Limit } from '../../const';
 import Map from '../../components/map/map';
-import NearbyOffersList from '../../components/offers/nearby-offers-list';
+import { NearbyOffersList, OfferInfo } from '../../components/offers';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import Header from '../../components/header/header';
 import {
@@ -10,7 +10,6 @@ import {
   fetchOfferAction,
   fetchReviewsAction,
 } from '../../store/api-actions';
-import OfferInfo from '../../components/offers/offer-info';
 import {
   selectCurrentOffer,
   selectNearbyOffers,
@@ -46,7 +45,7 @@ function OfferPage() {
   }, [id, dispatch]);
 
   const nearbyOffersLimited = useMemo(
-    () => nearbyOffers.slice(0, Limits.NearbyOffers),
+    () => nearbyOffers.slice(0, Limit.NearbyOffers),
     [nearbyOffers]
   );
 
@@ -81,7 +80,7 @@ function OfferPage() {
             <section className="offer">
               <div className="offer__gallery-container container">
                 <div className="offer__gallery">
-                  {currentOffer.images.slice(0, Limits.OfferImages).map((image) => (
+                  {currentOffer.images.slice(0, Limit.OfferImages).map((image) => (
                     <div className="offer__image-wrapper" key={image}>
                       <img
                         className="offer__image"

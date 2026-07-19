@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { MouseEvent } from 'react';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
@@ -13,6 +14,11 @@ function HeaderNavigation() {
   const userEmail = useAppSelector(selectUserEmail);
 
   const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;
+
+  const handleLogoutClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    dispatch(logoutAction());
+  };
 
   return (
     <nav className="header__nav">
@@ -34,10 +40,7 @@ function HeaderNavigation() {
               <Link
                 className="header__nav-link"
                 to={AppRoute.Main}
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  dispatch(logoutAction());
-                }}
+                onClick={handleLogoutClick}
               >
                 <span className="header__signout">Sign Out</span>
               </Link>
