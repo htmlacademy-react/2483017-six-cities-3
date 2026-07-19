@@ -32,6 +32,8 @@ export const offersData = createSlice({
         ...offer,
         isFavorite: false,
       }));
+
+      state.favoriteOffers = [];
     },
   },
   extraReducers(builder) {

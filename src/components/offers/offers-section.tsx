@@ -4,11 +4,11 @@ import { SINGULAR_AMOUNT, SortOption } from '../../const';
 import { getSortedOffers } from '../../utils';
 import { useActiveOffer } from '../../hooks/use-active-offer';
 import SortingOptions from '../sorting-options/sorting-options';
-import OffersList from '../offers/offer-list';
+import OffersList from './offer-list';
 import Map from '../map/map';
 import { selectCurrentCityOffers } from '../../store/offers';
 import { selectCity } from '../../store/app-process';
-import OffersEmpty from '../offers/offers-empty';
+import OffersEmpty from './offers-empty';
 
 function OffersSection() {
   const cityName = useAppSelector(selectCity);

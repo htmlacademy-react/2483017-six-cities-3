@@ -6,6 +6,8 @@ import { loginAction } from '../../store/api-actions';
 import { selectAuthorizationStatus } from '../../store/user-process';
 import RandomCity from '../../components/random-city/random-city';
 
+const PASSWORD_PATTERN = '^(?=.*[A-Za-z])(?=.*\\d).+$';
+
 function LoginPage() {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
@@ -89,7 +91,7 @@ function LoginPage() {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  pattern="^(?=.*[A-Za-z])(?=.*\d).+$"
+                  pattern={PASSWORD_PATTERN}
                   title="Password must contain at least one letter and one number"
                   required
                 />

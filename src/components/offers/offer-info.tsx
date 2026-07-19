@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { OfferDetails } from '../../types/offer';
 import { SINGULAR_AMOUNT, STAR_WIDTH_PERCENT } from '../../const';
 import OfferFavoriteButton from './offer-favorite-button';
-import ReviewsSection from '../reviews/reviews-section';
+import { ReviewsSection } from '../reviews';
 import { capitalizeFirstLetter } from '../../utils/common';
 
 type OfferInfoProps = {

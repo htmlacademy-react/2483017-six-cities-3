@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { AuthorizationStatus } from '../../const';
 import { useAppSelector } from '../../hooks';
 import ReviewForm from './review-form';
-import ReviewsList from '../reviews/reviews-list';
+import ReviewsList from './reviews-list';
 import { selectAuthorizationStatus } from '../../store/user-process';
 import { selectReviews } from '../../store/offers';
 

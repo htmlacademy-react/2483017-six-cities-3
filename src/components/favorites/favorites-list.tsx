@@ -3,7 +3,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { AppRoute, STAR_WIDTH_PERCENT } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectFavoriteOffers } from '../../store/offers';
-import CardFavoriteButton from '../offers/card-favorite-button';
+import { CardFavoriteButton } from '../offers';
 import { getFavoriteOffersByCity } from '../../utils';
 import { capitalizeFirstLetter } from '../../utils/common';
 import { changeCity } from '../../store/app-process';
