@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CITIES, NameSpace } from '../../const';
 import { changeCity } from '../../store/app-process';
-import { withStore } from '../../utils/mock-component';
+import { withHistory, withStore } from '../../utils/mock-component';
 import { makeFakeStore } from '../../utils/mocks';
 import CitiesList from './cities-list';
 
@@ -13,11 +13,11 @@ describe('Component: CitiesList', () => {
       makeFakeStore(),
     );
 
-    render(withStoreComponent);
+    render(withHistory(withStoreComponent));
 
     CITIES.forEach((city) => {
       expect(
-        screen.getByRole('button', { name: city }),
+        screen.getByRole('link', { name: city })
       ).toBeInTheDocument();
     });
   });
@@ -34,10 +34,10 @@ describe('Component: CitiesList', () => {
       }),
     );
 
-    render(withStoreComponent);
+    render(withHistory(withStoreComponent));
 
     expect(
-      screen.getByRole('button', { name: activeCity }),
+      screen.getByRole('link', { name: activeCity }),
     ).toHaveClass('tabs__item--active');
   });
 
@@ -55,10 +55,10 @@ describe('Component: CitiesList', () => {
       }),
     );
 
-    render(withStoreComponent);
+    render(withHistory(withStoreComponent));
 
     await user.click(
-      screen.getByRole('button', { name: selectedCity }),
+      screen.getByRole('link', { name: selectedCity }),
     );
 
     expect(mockStore.getActions()).toEqual([

@@ -1,8 +1,9 @@
 import { memo, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { changeCity, selectCity } from '../../store/app-process';
-import { CITIES } from '../../const';
+import { AppRoute, CITIES } from '../../const';
 
 function CitiesList() {
   const dispatch = useAppDispatch();
@@ -17,7 +18,8 @@ function CitiesList() {
     <ul className="locations__list tabs__list">
       {CITIES.map((city) => (
         <li className="locations__item" key={city}>
-          <button
+          <Link
+            to={AppRoute.Main}
             className={classNames(
               'locations__item-link',
               'tabs__item',
@@ -25,11 +27,10 @@ function CitiesList() {
                 'tabs__item--active': city === activeCity,
               }
             )}
-            type="button"
             onClick={() => handleCityClick(city)}
           >
             <span>{city}</span>
-          </button>
+          </Link>
         </li>
       ))}
     </ul>
