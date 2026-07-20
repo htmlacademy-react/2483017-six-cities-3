@@ -14,14 +14,14 @@ type MapProps = {
 
 const DEFAULT_CUSTOM_ICON = new Icon({
   iconUrl: MarkerUrl.Default,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconSize: [27, 39],
+  iconAnchor: [13.5, 39]
 });
 
 const CURRENT_CUSTOM_ICON = new Icon({
   iconUrl: MarkerUrl.Current,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconSize: [27, 39],
+  iconAnchor: [13.5, 39]
 });
 
 function Map({city, offers, selectedOffer, className = 'cities__map map'}: MapProps) {
